@@ -20,23 +20,10 @@ users.pre('save', function(next) {
     .catch(console.error);
 });
 
-users.statics.createFromOauth = function(email) {
-
-  if(! email) { return Promise.reject('Validation Error'); }
-
-  return this.findOne( {email} )
-    .then(user => {
-      if( !user ) { throw new Error('User Not Found'); }
-      console.log('Welcome Back', user.username);
-      return user;
-    })
-    .catch( error => {
-      console.log('Creating new user');
-      let username = email;
-      let password = 'none';
-      return this.create({username, password, email});
-    });
-
+users.statics.authenticateToken = function(token) {
+  let parsedToken = jwt.verify(token,process.env.SECRET);
+  let query = {_id:parsedToken.id};
+  return this.findOne(query);
 };
 
 users.statics.authenticateBasic = function(auth) {
@@ -58,7 +45,7 @@ users.methods.generateToken = function() {
     role: this.role,
   };
   
-  return jwt.sign(token, process.env.SECRET);
+  return jwt.sign(token, process.env.SECRET || 'changit');
 };
 
 module.exports = mongoose.model('users', users);
