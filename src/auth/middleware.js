@@ -20,7 +20,7 @@ module.exports = (req, res, next) => {
     return _authError();
   }
   
-  function _authenticateBearer(authString) {
+  function _authBearer(authString) {
     return User.authenticateToken(authString)
       .then(user => _authenticate(user) )
       .catch(next);

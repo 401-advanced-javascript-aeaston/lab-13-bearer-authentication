@@ -39,13 +39,13 @@ users.methods.comparePassword = function(password) {
 };
 
 users.methods.generateToken = function() {
-  
+  console.log('WE ARE IN');
   let token = {
     id: this._id,
     role: this.role,
   };
   
-  return jwt.sign(token, process.env.SECRET || 'changit');
+  return jwt.sign(token, process.env.SECRET, {expiresIn: '180s'});
 };
 
 module.exports = mongoose.model('users', users);
