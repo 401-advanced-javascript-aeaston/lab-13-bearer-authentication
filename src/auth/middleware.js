@@ -1,6 +1,6 @@
 'use strict';
 
-const User = require('./users-model.js.js');
+const User = require('./users-model.js');
 
 module.exports = (req, res, next) => {
   
@@ -10,17 +10,23 @@ module.exports = (req, res, next) => {
     switch( authType.toLowerCase() ) {
       case 'basic': 
         return _authBasic(authString);
+      case 'bearer':
+        return _authBearer(authString);
       default: 
         return _authError();
     }
   }
   catch(e) {
-    next(e);
+    return _authError();
   }
   
-  
+  function _authBearer(authString) {
+    return User.authenticateToken(authString)
+      .then(user => _authenticate(user) )
+      .catch(next);
+  }
+
   function _authBasic(str) {
-    // str: am9objpqb2hubnk=
     let base64Buffer = Buffer.from(str, 'base64'); // <Buffer 01 02 ...>
     let bufferString = base64Buffer.toString();    // john:mysecret
     let [username, password] = bufferString.split(':'); // john='john'; mysecret='mysecret']
@@ -28,8 +34,8 @@ module.exports = (req, res, next) => {
     
     return User.authenticateBasic(auth)
       .then(user => _authenticate(user) )
-      .catch(next);
-  }
+      .catch();
+  } 
 
   function _authenticate(user) {
     if(user) {
