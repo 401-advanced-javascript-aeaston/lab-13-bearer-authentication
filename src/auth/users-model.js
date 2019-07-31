@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+const usedTokens = new Set();
+
 const users = new mongoose.Schema({
   username: {type:String, required:true, unique:true},
   password: {type:String, required:true},
@@ -21,6 +23,10 @@ users.pre('save', function(next) {
 });
 
 users.statics.authenticateToken = function(token) {
+  if(usedTokens.has(token)) {
+    return Promise.reject('Token has already been used.');
+  }
+  usedTokens.add(token);
   let parsedToken = jwt.verify(token,process.env.SECRET);
   let query = {_id:parsedToken.id};
   return this.findOne(query);
@@ -45,7 +51,7 @@ users.methods.generateToken = function() {
     role: this.role,
   };
   
-  return jwt.sign(token, process.env.SECRET, {expiresIn: '180s'});
+  return jwt.sign(token, process.env.SECRET, {expiresIn: '900s'});
 };
 
 module.exports = mongoose.model('users', users);
