@@ -18,11 +18,11 @@ users.virtual('acl', {
   justOne: true,
 });
 
-// const capabilities = {
-//   admin: ['create', 'read', 'update', 'delete'],
-//   editor: ['create', 'read', 'update'],
-//   user: ['read']
-// }
+const capabilities = {
+  admin: ['create', 'read', 'update', 'delete'],
+  editor: ['create', 'read', 'update'],
+  user: ['read']
+}
 
 users.pre('save', function(next) {
   try {
