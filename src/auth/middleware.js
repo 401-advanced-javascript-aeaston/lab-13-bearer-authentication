@@ -2,54 +2,56 @@
 
 const User = require('./users-model.js');
 
-module.exports = (req, res, next) => {
-  
-  try {
-    let [authType, authString] = req.headers.authorization.split(/\s+/);
-    
-    switch( authType.toLowerCase() ) {
-      case 'basic': 
-        return _authBasic(authString);
-      case 'bearer':
-        return _authBearer(authString);
-      default: 
-        return _authError();
-    }
-  }
-  catch(e) {
-    return _authError();
-  }
-  
-  function _authBearer(authString) {
-    return User.authenticateToken(authString)
-      .then(user => _authenticate(user) )
-      .catch(next);
-  }
+module.exports = (capability) => {
 
-  function _authBasic(str) {
-    let base64Buffer = Buffer.from(str, 'base64'); // <Buffer 01 02 ...>
-    let bufferString = base64Buffer.toString();    // john:mysecret
-    let [username, password] = bufferString.split(':'); // john='john'; mysecret='mysecret']
-    let auth = {username,password}; // { username:'john', password:'mysecret' }
+  return (req, res, next) => {
+  
+    try {
+      let [authType, authString] = req.headers.authorization.split(/\s+/);
+      
+      switch( authType.toLowerCase() ) {
+        case 'basic': 
+          return _authBasic(authString);
+        case 'bearer':
+          return _authBearer(authString);
+        default: 
+          return _authError();
+      }
+    }
+    catch(e) {
+      return _authError();
+    }
     
-    return User.authenticateBasic(auth)
-      .then(user => _authenticate(user) )
-      .catch();
-  } 
+    function _authBearer(authString) {
+      return User.authenticateToken(authString)
+        .then(user => _authenticate(user) )
+        .catch(next);
+    }
 
-  function _authenticate(user) {
-    if(user) {
-      req.user = user;
-      req.token = user.generateToken();
-      next();
+    function _authBasic(str) {
+      let base64Buffer = Buffer.from(str, 'base64'); // <Buffer 01 02 ...>
+      let bufferString = base64Buffer.toString();    // john:mysecret
+      let [username, password] = bufferString.split(':'); // john='john'; mysecret='mysecret']
+      let auth = {username,password}; // { username:'john', password:'mysecret' }
+      
+      return User.authenticateBasic(auth)
+        .then(user => _authenticate(user) )
+        .catch();
+    } 
+
+    function _authenticate(user) {
+      if(user && (!capability || (user.can(capability)))) {
+        req.user = user;
+        req.token = user.generateToken();
+        next();
+      }
+      else {
+        _authError();
+      }
     }
-    else {
-      _authError();
+    
+    function _authError() {
+      next('Invalid User ID/Password');
     }
   }
-  
-  function _authError() {
-    next('Invalid User ID/Password');
-  }
-  
 };
