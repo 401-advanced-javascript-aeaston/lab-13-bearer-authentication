@@ -11,6 +11,28 @@ const users = new mongoose.Schema({
   password: {type:String, required:true},
   email: {type: String},
   role: {type: String, default:'user', enum: ['admin','editor','user']},
+}, {toObject: {virtuals: true}, toJSON: {virtuals: true}});
+
+users.virtual('acl', {
+  ref: 'roles',
+  localField: 'roles',
+  foreignField:'role',
+  justOne: true,
+});
+
+const capabilities = {
+  admin: ['create', 'read', 'update', 'delete'],
+  editor: ['create', 'read', 'update'],
+  user: ['read']
+}
+
+users.pre('save', function(next) {
+  try {
+    this.populate('acl');
+  }
+  catch(e) {
+    throw new Error(e.message);
+  }
 });
 
 users.pre('save', function(next) {
@@ -42,6 +64,10 @@ users.statics.authenticateBasic = function(auth) {
 users.methods.comparePassword = function(password) {
   return bcrypt.compare( password, this.password )
     .then( valid => valid ? this : null);
+};
+
+users.methods.can = function(capability) {
+  return capabilities[this.role].includes(capability);
 };
 
 users.methods.generateToken = function() {
