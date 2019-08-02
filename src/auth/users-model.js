@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken');
 
 const usedTokens = new Set();
 
+const roles = require('./roles-model.js');
+
 const users = new mongoose.Schema({
   username: {type:String, required:true, unique:true},
   password: {type:String, required:true},
@@ -20,13 +22,13 @@ users.virtual('acl', {
   justOne: true,
 });
 
-const capabilities = {
-  admin: ['create', 'read', 'update', 'delete'],
-  editor: ['create', 'read', 'update'],
-  user: ['read']
-}
+// const capabilities = {
+//   admin: ['create', 'read', 'update', 'delete'],
+//   editor: ['create', 'read', 'update'],
+//   user: ['read']
+// }
 
-users.pre('save', function(next) {
+users.pre('findOne', function(next) {
   try {
     this.populate('acl');
   }
@@ -66,9 +68,9 @@ users.methods.comparePassword = function(password) {
     .then( valid => valid ? this : null);
 };
 
-users.methods.can = function(capability) {
-  return capabilities[this.role].includes(capability);
-};
+// users.methods.can = function(capability) {
+//   return capabilities[this.role].includes(capability);
+// };
 
 users.methods.generateToken = function() {
   console.log('WE ARE IN');

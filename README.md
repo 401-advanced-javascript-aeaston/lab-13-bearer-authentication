@@ -45,6 +45,18 @@ If their an error on the finding the paths
 * Sign-in with token: `http post :3000/signin "authorization: bearer TOKENHERE"`
   * In the TOKENHERE it should be the token that was return in the 'sign-in'.
   * Return the token or error if the the token has expires.
+
+signing up users:
+`echo '{"username":"<name>", "password":"<password>", "role":"editor"}'| http post :3000/signup`
+
+adding roles to db:
+`echo '{"role":"<role title>", "capabilities":["<capability","<capability","<capability"]}'| http post :3000/roles`
+
+basic sign-in:
+`http post :3000/signin -a <name>:<password>`
+
+authenticated sign-in:
+`http post :3000/signin "authorization:bearer header.payload.signature"`
   
 #### Tests
 * `npm test`
