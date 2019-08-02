@@ -9,24 +9,36 @@ const router = express.Router();
 //   res.status(200).send('Welcome to the danger zone');
 // });
 
-router.get('/profile', auth(), (req, res) => {
-  res.status(200).send('Welcome to your home');
+router.get('/hidden-stuff', auth(), (req, res) => {
+  res.status(200).send('Welcome hidden-stuff');
 });
 
-router.get('/document', auth('read'), (req, res) => {
-  res.status(200).send('Welcome to your home');
+router.get('/something-to-read', auth('read'), (req, res) => {
+  res.status(200).send('Welcome to something-to-read');
 });
 
-router.get('/delete-doc', auth('delete'), (req, res) => {
-  res.status(200).send('Welcome to your home');
+router.get('/bye-bye', auth('delete'), (req, res) => {
+  res.status(200).send('Welcome to bye-bye');
 });
 
-router.get('/add', auth('create'), (req, res) => {
-  res.status(200).send('Welcome to your home');
+router.post('/create-a-thing', auth('create'), (req, res) => {
+  res.status(200).send('Welcome to create-a-thing');
 });
 
-router.get('/openarea', (req, res) => {
-  res.status(200).send('Welcome to the danger zone');
+router.get('/public-stuff', (req, res) => {
+  res.status(200).send('Welcome to public-stuff');
+});
+
+router.put('/update', auth('update'), (req, res) => {
+  res.status(200).send('Welcome to update');
+});
+
+router.patch('/jp', auth('update'), (req, res) => {
+  res.status(200).send('Welcome to jp');
+});
+
+router.get('/everything', auth('superuser'), (req, res) => {
+  res.status(200).send('Welcome to everything');
 });
 
 module.exports = router;
