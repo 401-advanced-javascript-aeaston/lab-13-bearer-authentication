@@ -47,6 +47,15 @@ describe('Auth Router', () => {
           });
       });
 
+      it('can signin with bearer', () => {
+        return mockRequest.post('/signin')
+          .set('authorization', 'bearer ' + encodedToken)
+          .then(results => {
+            var token = jwt.verify(results.headers.auth, process.env.SECRET);
+            expect(token.id).toEqual(id);
+          });
+      });
+      
     });
     
   });

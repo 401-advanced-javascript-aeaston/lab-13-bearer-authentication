@@ -72,11 +72,14 @@ users.methods.comparePassword = function(password) {
 //   return capabilities[this.role].includes(capability);
 // };
 
+
+
 users.methods.generateToken = function() {
   console.log('WE ARE IN');
   let token = {
     id: this._id,
     role: this.role,
+    // capabilities: this.acl.capabilities
   };
   
   return jwt.sign(token, process.env.SECRET, {expiresIn: '15m'});
