@@ -35,14 +35,17 @@ module.exports = (capability) => {
       let auth = {username,password}; // { username:'john', password:'mysecret' }
       
       return User.authenticateBasic(auth)
+      console.log('????????????')
         .then(user => _authenticate(user) )
         .catch();
     } 
 
     function _authenticate(user) {
-      if(user && (!capability || (user.can(capability)))) {
+      console.log('_AUTHENTICATE_')
+      if(user && (!capability || user.can(capability))) {
         req.user = user;
         req.token = user.generateToken();
+        console.log('_IN THE IF STATEMENT_');
         next();
       }
       else {
