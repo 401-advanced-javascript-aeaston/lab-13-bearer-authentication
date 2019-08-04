@@ -30,8 +30,8 @@ authRouter.post('/roles', (req, res, next) => {
 authRouter.post('/signin', auth(), (req, res, next) => {
   console.log('Success story!!!!');
   res.cookie('auth', req.token);
-  res.send('auth', req.token);
-  res.send(200);
+  res.set('auth', req.token);
+  res.status(200).send("OK");
 });
 
 
