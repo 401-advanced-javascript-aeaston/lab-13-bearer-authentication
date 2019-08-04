@@ -33,9 +33,8 @@ module.exports = (capability) => {
       let bufferString = base64Buffer.toString();    // john:mysecret
       let [username, password] = bufferString.split(':'); // john='john'; mysecret='mysecret']
       let auth = {username,password}; // { username:'john', password:'mysecret' }
-      
+    
       return User.authenticateBasic(auth)
-      console.log('????????????')
         .then(user => _authenticate(user) )
         .catch();
     } 

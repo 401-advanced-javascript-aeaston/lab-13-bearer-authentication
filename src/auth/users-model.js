@@ -17,7 +17,7 @@ const users = new mongoose.Schema({
 
 users.virtual('acl', {
   ref: 'roles',
-  localField: 'roles',
+  localField: 'role',
   foreignField:'role',
   justOne: true,
 });
@@ -28,7 +28,7 @@ users.virtual('acl', {
 //   user: ['read']
 // }
 
-users.pre('findOne', function(next) {
+users.pre('findOne', function() {
   try {
     this.populate('acl');
   }
@@ -64,8 +64,10 @@ users.statics.authenticateBasic = function(auth) {
 };
 
 users.methods.comparePassword = function(password) {
+  console.log('password', password);
   return bcrypt.compare( password, this.password )
-    .then( valid => valid ? this : null);
+    .then( valid => valid ? this : null)
+    .catch(console.error);
 };
 
 // users.methods.can = function(capability) {
