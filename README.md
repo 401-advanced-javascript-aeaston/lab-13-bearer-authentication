@@ -63,6 +63,6 @@ authenticated sign-in:
 * There need to be a test for signing-in with a token and signing-in with a expire token. Otherwise the testes are passing.
 
 #### UML
-_Image Coming Soon!_
+![uml](./assets/bearer-authentication.jpg)
 
 
