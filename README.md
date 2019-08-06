@@ -4,9 +4,8 @@
 ### Author: Adrienne Easton and Liz Kavalski
 
 ### Links and Resources
-* [submission PR](http://xyz.com)
-* [travis](http://xyz.com)
-* [back-end](http://xyz.com) (when applicable)
+* [submission PR](https://github.com/401-advanced-javascript-aeaston/lab-13-bearer-authentication/pull/6)
+* [travis][![Build Status](https://travis-ci.com/401-advanced-javascript-aeaston/lab-13-bearer-authentication.svg?branch=master)](https://travis-ci.com/401-advanced-javascript-aeaston/lab-13-bearer-authentication)
 
 #### Documentation
 
@@ -64,8 +63,6 @@ authenticated sign-in:
 * There need to be a test for signing-in with a token and signing-in with a expire token. Otherwise the testes are passing.
 
 #### UML
-_Image Coming Soon!_
+![uml](./assets/bearer-authentication.jpg)
 
-(https://github.com/401-advanced-javascript-aeaston/lab-13-bearer-authentication/pull/1)
-[![Build Status](https://travis-ci.com/401-advanced-javascript-aeaston/lab-13-bearer-authentication.svg?branch=master)](https://travis-ci.com/401-advanced-javascript-aeaston/lab-13-bearer-authentication)
 
